@@ -22,6 +22,9 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/board/generic/device.mk)
 
+$(call inherit-product, vendor/cm/config/gsm.mk)
+$(call inherit-product, vendor/cm/config/common_mini_phone.mk)
+
 # Overrides
 PRODUCT_NAME := full
 PRODUCT_DEVICE := generic
