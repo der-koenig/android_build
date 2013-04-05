@@ -29,6 +29,8 @@ endif
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/board/generic_x86/device.mk)
 
+$(call inherit-product, vendor/cm/config/common_mini_phone.mk)
+
 # Ensure we package the BIOS files too.
 PRODUCT_PACKAGES += \
 	bios.bin \
