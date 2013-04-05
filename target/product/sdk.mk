@@ -64,8 +64,8 @@ PRODUCT_PACKAGES := \
 	Calendar \
 	SmokeTest \
 	SmokeTestApp \
-	rild \
-	LegacyCamera
+	rild
+	#LegacyCamera
 
 
 # Define the host tools and libs that are parts of the SDK.
@@ -83,7 +83,7 @@ PRODUCT_PACKAGE_OVERLAYS := development/sdk_overlay
 PRODUCT_COPY_FILES := \
 	device/generic/goldfish/data/etc/apns-conf.xml:system/etc/apns-conf.xml \
 	system/core/rootdir/etc/vold.fstab:system/etc/vold.fstab \
-	frameworks/base/data/sounds/effects/camera_click.ogg:system/media/audio/ui/camera_click.ogg \
+	#frameworks/base/data/sounds/effects/camera_click.ogg:system/media/audio/ui/camera_click.ogg \
 	frameworks/base/data/sounds/effects/VideoRecord.ogg:system/media/audio/ui/VideoRecord.ogg \
 	frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
 	development/tools/emulator/system/camera/media_profiles.xml:system/etc/media_profiles.xml \
