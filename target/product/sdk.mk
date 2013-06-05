@@ -174,3 +174,6 @@ PRODUCT_LOCALES = \
 -include external/svox/pico/lang/PicoLangEsEsInSystem.mk
 -include external/svox/pico/lang/PicoLangFrFrInSystem.mk
 -include external/svox/pico/lang/PicoLangItItInSystem.mk
+
+$(call inherit-product, vendor/cm/config/gsm.mk)
+$(call inherit-product, vendor/cm/config/common_mini_phone.mk)
