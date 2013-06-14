@@ -1262,6 +1262,15 @@ ifdef PRODUCT_EXTRA_RECOVERY_KEYS
 endif
 	$(call generate-userimage-prop-dictionary, $(zip_root)/META/misc_info.txt)
 	@# Zip everything up, preserving symlinks
+
+ifneq ($(TARGET_CUSTOM_RELEASETOOL),)
+	@echo -e ${CL_YLW}"Running custom releasetool..."${CL_RST}
+	$(hide) TARGETFILES=$(zip_root) APKCERTS=$(APKCERTS_FILE) $(TARGET_CUSTOM_RELEASETOOL)
+else
+	@echo -e ${CL_YLW}"Running releasetool..."${CL_RST}
+	$(hide) TARGETFILES=$(zip_root) APKCERTS=$(APKCERTS_FILE) ./vendor/cm/tools/squisher
+endif
+
 	$(hide) (cd $(zip_root) && zip -qry ../$(notdir $@) .)
 	@# Run fs_config on all the system, boot ramdisk, and recovery ramdisk files in the zip, and save the output
 	$(hide) zipinfo -1 $@ | awk 'BEGIN { FS="SYSTEM/" } /^SYSTEM\// {print "system/" $$2}' | $(HOST_OUT_EXECUTABLES)/fs_config > $(zip_root)/META/filesystem_config.txt
@@ -1327,13 +1336,6 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS) $(SEL
 .PHONY: otapackage bacon
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
-ifneq ($(TARGET_CUSTOM_RELEASETOOL),)
-	@echo -e ${CL_YLW}"Running custom releasetool..."${CL_RST}
-	$(hide) OTAPACKAGE=$(INTERNAL_OTA_PACKAGE_TARGET) APKCERTS=$(APKCERTS_FILE) $(TARGET_CUSTOM_RELEASETOOL)
-else
-	@echo -e ${CL_YLW}"Running releasetool..."${CL_RST}
-	$(hide) OTAPACKAGE=$(INTERNAL_OTA_PACKAGE_TARGET) APKCERTS=$(APKCERTS_FILE) ./vendor/cm/tools/squisher
-endif
 
 # -----------------------------------------------------------------
 # The update package
