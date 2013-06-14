@@ -1278,6 +1278,17 @@ endif
 	$(hide) zipinfo -1 $@ | awk 'BEGIN { FS="RECOVERY/RAMDISK/" } /^RECOVERY\/RAMDISK\// {print $$2}' | $(HOST_OUT_EXECUTABLES)/fs_config > $(zip_root)/META/recovery_filesystem_config.txt
 	$(hide) (cd $(zip_root) && zip -q ../$(notdir $@) META/*filesystem_config.txt)
 
+ifneq ($(OUTPUT_FILES_ARCHIVE_DIR),)
+	$(hide) mkdir -p $(OUTPUT_FILES_ARCHIVE_DIR)
+	$(hide) $(ACP) $@ $(OUTPUT_FILES_ARCHIVE_DIR)/$(TARGET_DEVICE)-$(BUILD_NUMBER)-testsigned.zip
+endif
+ifneq ($(SIGNING_KEY_DIR),)
+	$(hide) mv $@ $(zip_root)-testsigned.zip
+	./build/tools/releasetools/sign_target_files_apks -e Superuser.apk,Term.apk= -o -d $(SIGNING_KEY_DIR) $(zip_root)-testsigned.zip $@
+ifneq ($(OUTPUT_FILES_ARCHIVE_DIR),)
+	$(hide) mv $@ $(OUTPUT_FILES_ARCHIVE_DIR)/$(TARGET_DEVICE)-$(BUILD_NUMBER)-signed.zip
+endif
+endif
 
 target-files-package: $(BUILT_TARGET_FILES_PACKAGE)
 
@@ -1332,6 +1343,11 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS) $(SEL
 	   --backup=$(backuptool) \
 	   --override_device=$(override_device) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
+
+ifneq ($(OUTPUT_FILES_ARCHIVE_DIR),)
+	$(hide) mkdir -p $(OUTPUT_FILES_ARCHIVE_DIR)
+	$(hide) $(ACP) $@ $(OUTPUT_FILES_ARCHIVE_DIR)/$(TARGET_DEVICE)-$(BUILD_NUMBER)-ota-$(signing_suffix).zip
+endif
 
 .PHONY: otapackage bacon
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
