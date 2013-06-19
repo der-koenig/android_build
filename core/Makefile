@@ -1285,15 +1285,17 @@ ifeq ($(BOARD_USES_COMBINED_BOOT_IMAGE),true)
 endif
 	$(hide) (cd $(zip_root) && zip -q ../$(notdir $@) META/*filesystem_config.txt)
 
-ifneq ($(OUTPUT_FILES_ARCHIVE_DIR),)
-	$(hide) mkdir -p $(OUTPUT_FILES_ARCHIVE_DIR)
-	$(hide) $(ACP) $@ $(OUTPUT_FILES_ARCHIVE_DIR)/$(TARGET_DEVICE)-$(BUILD_NUMBER)-testsigned.zip
-endif
 ifneq ($(SIGNING_KEY_DIR),)
 	$(hide) mv $@ $(zip_root)-testsigned.zip
 	./build/tools/releasetools/sign_target_files_apks -e Superuser.apk,Term.apk= -o -d $(SIGNING_KEY_DIR) $(zip_root)-testsigned.zip $@
 ifneq ($(OUTPUT_FILES_ARCHIVE_DIR),)
-	$(hide) mv $@ $(OUTPUT_FILES_ARCHIVE_DIR)/$(TARGET_DEVICE)-$(BUILD_NUMBER)-signed.zip
+	$(hide) mkdir -p $(OUTPUT_FILES_ARCHIVE_DIR)
+	$(hide) $(ACP) $@ $(OUTPUT_FILES_ARCHIVE_DIR)/$(TARGET_DEVICE)-$(BUILD_NUMBER)-signed.zip
+endif
+else
+ifneq ($(OUTPUT_FILES_ARCHIVE_DIR),)
+	$(hide) mkdir -p $(OUTPUT_FILES_ARCHIVE_DIR)
+	$(hide) $(ACP) $@ $(OUTPUT_FILES_ARCHIVE_DIR)/$(TARGET_DEVICE)-$(BUILD_NUMBER)-testsigned.zip
 endif
 endif
 
